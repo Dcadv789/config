@@ -16,7 +16,7 @@ interface Pessoa {
   telefone: string;
   cargo: string;
   empresa_id: string;
-  ativo: boolean;
+  Ativo: boolean;
   empresas?: {
     razao_social: string;
   };
@@ -54,7 +54,7 @@ const PessoasTab: React.FC<PessoasTabProps> = ({ empresaId }) => {
       }
 
       if (statusFilter !== 'todos') {
-        query = query.eq('ativo', statusFilter === 'ativos');
+        query = query.eq('Ativo', statusFilter === 'ativos');
       }
 
       const { data, error } = await query;
@@ -77,7 +77,7 @@ const PessoasTab: React.FC<PessoasTabProps> = ({ empresaId }) => {
     try {
       const { error } = await supabase
         .from('pessoas')
-        .update({ ativo: !pessoa.ativo })
+        .update({ Ativo: !pessoa.Ativo })
         .eq('id', pessoa.id);
 
       if (error) throw error;

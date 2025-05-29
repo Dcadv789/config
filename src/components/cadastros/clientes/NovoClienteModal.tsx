@@ -21,7 +21,7 @@ const NovoClienteModal: React.FC<NovoClienteModalProps> = ({ isOpen, onClose, on
     razao_social: '',
     nome_fantasia: '',
     cnpj: '',
-    empresa_id: empresaId,
+    empresa_id: empresaId || null, // Convertendo string vazia para null
   });
 
   useEffect(() => {
@@ -82,6 +82,7 @@ const NovoClienteModal: React.FC<NovoClienteModalProps> = ({ isOpen, onClose, on
         .from('clientes')
         .insert([{
           ...formData,
+          empresa_id: formData.empresa_id || null, // Garantindo que seja null se vazio
           ativo: true
         }]);
 

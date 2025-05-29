@@ -23,7 +23,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
     email: '',
     telefone: '',
     cargo: '',
-    empresa_id: empresaId,
+    empresa_id: empresaId || null, // Convertendo string vazia para null
   });
 
   if (!isOpen) return null;
@@ -63,7 +63,8 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
         .insert([{
           ...formData,
           codigo: nextCode,
-          ativo: true
+          empresa_id: formData.empresa_id || null, // Garantindo que seja null se vazio
+          Ativo: true
         }]);
 
       if (error) throw error;
@@ -114,7 +115,6 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
                     ? 'bg-gray-800 text-white border-gray-700'
                     : 'bg-white text-gray-900 border-gray-300'
                 }`}
-                required
               />
             </div>
           </div>
@@ -170,7 +170,6 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
                     ? 'bg-gray-800 text-white border-gray-700'
                     : 'bg-white text-gray-900 border-gray-300'
                 }`}
-                required
               />
             </div>
           </div>
