@@ -23,7 +23,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
     email: '',
     telefone: '',
     cargo: '',
-    empresa_id: empresaId,
+    Empresa_ID: empresaId,
   });
 
   if (!isOpen) return null;

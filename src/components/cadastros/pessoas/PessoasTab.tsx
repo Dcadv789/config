@@ -15,9 +15,9 @@ interface Pessoa {
   email: string;
   telefone: string;
   cargo: string;
-  empresa_id: string;
+  Empresa_ID: string;
   Ativo: boolean;
-  empresa?: {
+  empresas?: {
     razao_social: string;
   };
 }
@@ -46,11 +46,11 @@ const PessoasTab: React.FC<PessoasTabProps> = ({ empresaId }) => {
         .from('pessoas')
         .select(`
           *,
-          empresa:empresas(razao_social)
+          empresas(razao_social)
         `);
       
       if (empresaId) {
-        query = query.eq('empresa_id', empresaId);
+        query = query.eq('Empresa_ID', empresaId);
       }
 
       if (statusFilter !== 'todos') {

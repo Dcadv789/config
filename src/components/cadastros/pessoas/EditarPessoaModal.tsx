@@ -12,7 +12,7 @@ interface Pessoa {
   email: string;
   telefone: string;
   cargo: string;
-  empresa_id: string;
+  Empresa_ID: string;
 }
 
 interface EditarPessoaModalProps {
@@ -146,6 +146,7 @@ const EditarPessoaModal: React.FC<EditarPessoaModalProps> = ({
                   isDark
                     ? 'bg-gray-800 text-white border-gray-700'
                     : 'bg-white text-gray-900 border-gray-300'
+                
                 }`}
                 placeholder="00.000.000/0000-00"
               />

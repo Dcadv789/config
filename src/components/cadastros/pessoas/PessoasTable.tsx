@@ -12,7 +12,7 @@ interface Pessoa {
   telefone: string;
   cargo: string;
   Ativo: boolean;
-  empresa?: {
+  empresas?: {
     razao_social: string;
   };
 }
@@ -49,7 +49,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
       sdr: 'SDR',
       ambos: 'Vendedor/SDR'
     };
-    return cargos[cargo as keyof typeof cargos] || cargo;
+    return cargos[cargo.toLowerCase() as keyof typeof cargos] || cargo;
   };
 
   const getCargoBadgeClass = (cargo: string) => {
@@ -65,7 +65,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
         ? 'bg-purple-900/30 text-purple-400 border border-purple-800'
         : 'bg-purple-50 text-purple-700 border border-purple-200'
     };
-    return `${baseClasses} ${variants[cargo as keyof typeof variants] || ''}`;
+    return `${baseClasses} ${variants[cargo.toLowerCase() as keyof typeof variants] || ''}`;
   };
 
   return (
@@ -139,7 +139,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
                   </span>
                 </td>
                 <td className={`px-6 py-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {pessoa.empresa?.razao_social || '-'}
+                  {pessoa.empresas?.razao_social || '-'}
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-1">
