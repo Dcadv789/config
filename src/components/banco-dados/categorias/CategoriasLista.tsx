@@ -29,7 +29,7 @@ interface CategoriasListaProps {
   loading?: boolean;
   onEditGrupo: (grupoId: string) => void;
   onDeleteGrupo: (grupoId: string) => void;
-  onEditCategoria: (categoriaId: string) => void;
+  onEditCategoria: (categoria: Categoria) => void;
   onDeleteCategoria: (categoriaId: string) => void;
   onToggleCategoriaStatus: (categoriaId: string) => void;
   onEditEmpresasVinculadas: (categoria: Categoria) => void;
@@ -199,7 +199,7 @@ const CategoriasLista: React.FC<CategoriasListaProps> = ({
                           <Power className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => onEditCategoria(categoria.id)}
+                          onClick={() => onEditCategoria(categoria)}
                           className={`p-1.5 rounded-lg transition-colors ${
                             isDark
                               ? 'text-gray-400 hover:bg-gray-700'

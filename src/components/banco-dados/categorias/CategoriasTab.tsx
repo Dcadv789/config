@@ -4,6 +4,7 @@ import CategoriasHeader from './CategoriasHeader';
 import CategoriasFilter from './CategoriasFilter';
 import CategoriasLista from './CategoriasLista';
 import EditarCategoriaModal from './EditarCategoriaModal';
+import EditarGrupoModal from './EditarGrupoModal';
 import VincularEmpresasModal from './VincularEmpresasModal';
 
 interface Categoria {
@@ -39,7 +40,9 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
   const [tipoFilter, setTipoFilter] = useState<'receitas' | 'despesas' | 'todas'>('todas');
   const [statusFilter, setStatusFilter] = useState<'ativas' | 'inativas' | 'todas'>('ativas');
   const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);
+  const [selectedGrupo, setSelectedGrupo] = useState<GrupoCategoria | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditGrupoModalOpen, setIsEditGrupoModalOpen] = useState(false);
   const [isVincularModalOpen, setIsVincularModalOpen] = useState(false);
 
   useEffect(() => {
@@ -113,7 +116,11 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
   };
 
   const handleEditGrupo = async (grupoId: string) => {
-    // Implementar modal de edição de grupo
+    const grupo = grupos.find(g => g.id === grupoId);
+    if (grupo) {
+      setSelectedGrupo(grupo);
+      setIsEditGrupoModalOpen(true);
+    }
   };
 
   const handleDeleteGrupo = async (grupoId: string) => {
@@ -236,6 +243,18 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
             categoriaId={selectedCategoria.id}
           />
         </>
+      )}
+
+      {selectedGrupo && (
+        <EditarGrupoModal
+          isOpen={isEditGrupoModalOpen}
+          onClose={() => {
+            setIsEditGrupoModalOpen(false);
+            setSelectedGrupo(null);
+          }}
+          onSuccess={fetchCategorias}
+          grupo={selectedGrupo}
+        />
       )}
     </>
   );
