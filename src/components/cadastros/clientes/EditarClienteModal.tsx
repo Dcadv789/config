@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { X, Loader2, User, Mail, Phone, CreditCard } from 'lucide-react';
+import { X, Loader2, Building2, Building } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
 
 interface Cliente {
   id: string;
-  nome: string;
-  email: string;
-  cpf: string;
-  telefone: string;
+  codigo: string;
+  razao_social: string;
+  nome_fantasia: string;
+  cnpj: string;
   empresa_id: string;
 }
 
@@ -79,14 +79,31 @@ const EditarClienteModal: React.FC<EditarClienteModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-              Nome Completo
+              Código
+            </label>
+            <input
+              type="text"
+              value={formData.codigo}
+              onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+              className={`w-full px-3 py-2 rounded-lg ${
+                isDark
+                  ? 'bg-gray-800 text-white border-gray-700'
+                  : 'bg-white text-gray-900 border-gray-300'
+              }`}
+              required
+            />
+          </div>
+
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              Razão Social
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                value={formData.razao_social}
+                onChange={(e) => setFormData({ ...formData, razao_social: e.target.value })}
                 className={`w-full pl-9 pr-4 py-2 rounded-lg ${
                   isDark
                     ? 'bg-gray-800 text-white border-gray-700'
@@ -99,35 +116,14 @@ const EditarClienteModal: React.FC<EditarClienteModalProps> = ({
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-              CPF
+              Nome Fantasia
             </label>
             <div className="relative">
-              <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                value={formData.cpf}
-                onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                className={`w-full pl-9 pr-4 py-2 rounded-lg ${
-                  isDark
-                    ? 'bg-gray-800 text-white border-gray-700'
-                    : 'bg-white text-gray-900 border-gray-300'
-                }`}
-                placeholder="000.000.000-00"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-              E-mail
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                value={formData.nome_fantasia}
+                onChange={(e) => setFormData({ ...formData, nome_fantasia: e.target.value })}
                 className={`w-full pl-9 pr-4 py-2 rounded-lg ${
                   isDark
                     ? 'bg-gray-800 text-white border-gray-700'
@@ -140,22 +136,20 @@ const EditarClienteModal: React.FC<EditarClienteModalProps> = ({
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-              Telefone
+              CNPJ
             </label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="tel"
-                value={formData.telefone}
-                onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-                className={`w-full pl-9 pr-4 py-2 rounded-lg ${
-                  isDark
-                    ? 'bg-gray-800 text-white border-gray-700'
-                    : 'bg-white text-gray-900 border-gray-300'
-                }`}
-                placeholder="(00) 00000-0000"
-              />
-            </div>
+            <input
+              type="text"
+              value={formData.cnpj}
+              onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+              className={`w-full px-3 py-2 rounded-lg ${
+                isDark
+                  ? 'bg-gray-800 text-white border-gray-700'
+                  : 'bg-white text-gray-900 border-gray-300'
+              }`}
+              placeholder="00.000.000/0000-00"
+              required
+            />
           </div>
 
           <div className="flex justify-end gap-3 mt-6">

@@ -4,10 +4,11 @@ import { useTheme } from '../../../context/ThemeContext';
 
 interface Cliente {
   id: string;
-  nome: string;
-  email: string;
-  cpf: string;
-  telefone: string;
+  codigo: string;
+  razao_social: string;
+  nome_fantasia: string;
+  cnpj: string;
+  empresa_id: string;
   ativo: boolean;
   empresa?: {
     razao_social: string;
@@ -32,8 +33,8 @@ const ClientesTable: React.FC<ClientesTableProps> = ({
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const formatCPF = (cpf: string) => {
-    return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+  const formatCNPJ = (cnpj: string) => {
+    return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
   };
 
   return (
@@ -43,17 +44,12 @@ const ClientesTable: React.FC<ClientesTableProps> = ({
           <tr className={`border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
             <th className="px-6 py-3 text-left">
               <span className={`text-xs font-medium tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                Nome
+                Código
               </span>
             </th>
             <th className="px-6 py-3 text-left">
               <span className={`text-xs font-medium tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                CPF
-              </span>
-            </th>
-            <th className="px-6 py-3 text-left">
-              <span className={`text-xs font-medium tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                Contato
+                Razão Social
               </span>
             </th>
             <th className="px-6 py-3 text-left">
@@ -71,13 +67,13 @@ const ClientesTable: React.FC<ClientesTableProps> = ({
         <tbody className={`divide-y ${isDark ? 'divide-gray-700/50' : 'divide-gray-100'}`}>
           {loading ? (
             <tr>
-              <td colSpan={5} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <td colSpan={4} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Carregando...
               </td>
             </tr>
           ) : clientes.length === 0 ? (
             <tr>
-              <td colSpan={5} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <td colSpan={4} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Nenhum cliente encontrado
               </td>
             </tr>
@@ -85,16 +81,10 @@ const ClientesTable: React.FC<ClientesTableProps> = ({
             clientes.map((cliente) => (
               <tr key={cliente.id} className={`${isDark ? 'hover:bg-gray-800/30' : 'hover:bg-gray-50'}`}>
                 <td className={`px-6 py-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {cliente.nome}
+                  {cliente.codigo}
                 </td>
                 <td className={`px-6 py-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {formatCPF(cliente.cpf)}
-                </td>
-                <td className={`px-6 py-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="flex flex-col">
-                    <span>{cliente.email}</span>
-                    <span className="text-sm opacity-75">{cliente.telefone}</span>
-                  </div>
+                  {cliente.razao_social}
                 </td>
                 <td className={`px-6 py-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                   {cliente.empresa?.razao_social || '-'}

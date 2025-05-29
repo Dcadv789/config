@@ -8,10 +8,10 @@ import EditarClienteModal from './EditarClienteModal';
 
 interface Cliente {
   id: string;
-  nome: string;
-  email: string;
-  telefone: string;
-  cpf: string;
+  codigo: string;
+  razao_social: string;
+  nome_fantasia: string;
+  cnpj: string;
   empresa_id: string;
   ativo: boolean;
   empresa?: {
@@ -101,8 +101,8 @@ const ClientesTab: React.FC<ClientesTabProps> = ({ empresaId }) => {
   };
 
   const filteredClientes = clientes.filter(cliente =>
-    cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cliente.cpf.includes(searchTerm)
+    cliente.razao_social.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cliente.codigo.includes(searchTerm)
   );
 
   return (
