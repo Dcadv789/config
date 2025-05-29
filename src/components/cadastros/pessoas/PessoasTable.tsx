@@ -44,24 +44,26 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
   };
 
   const getCargoLabel = (cargo: string) => {
-    switch (cargo) {
-      case 'vendedor':
-        return 'Vendedor';
-      case 'sdr':
-        return 'SDR';
-      case 'ambos':
-        return 'Vendedor/SDR';
-      default:
-        return cargo;
-    }
+    const cargos = {
+      vendedor: 'Vendedor',
+      sdr: 'SDR',
+      ambos: 'Vendedor/SDR'
+    };
+    return cargos[cargo as keyof typeof cargos] || cargo;
   };
 
   const getCargoBadgeClass = (cargo: string) => {
-    const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium';
+    const baseClasses = 'px-2.5 py-1 rounded-full text-xs font-medium inline-flex items-center justify-center';
     const variants = {
-      vendedor: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-      sdr: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-      ambos: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+      vendedor: isDark
+        ? 'bg-blue-900/30 text-blue-400 border border-blue-800'
+        : 'bg-blue-50 text-blue-700 border border-blue-200',
+      sdr: isDark
+        ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-800'
+        : 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+      ambos: isDark
+        ? 'bg-purple-900/30 text-purple-400 border border-purple-800'
+        : 'bg-purple-50 text-purple-700 border border-purple-200'
     };
     return `${baseClasses} ${variants[cargo as keyof typeof variants] || ''}`;
   };
