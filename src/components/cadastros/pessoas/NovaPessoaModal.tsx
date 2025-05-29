@@ -23,7 +23,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
     email: '',
     telefone: '',
     cargo: '',
-    empresa_id: empresaId || null, // Convertendo string vazia para null
+    empresa_id: empresaId, // Usando diretamente o empresaId sem conversão
   });
 
   if (!isOpen) return null;
@@ -54,6 +54,13 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
     setLoading(true);
     setError(null);
 
+    // Validação da empresa
+    if (!empresaId) {
+      setError('Selecione uma empresa no filtro global antes de criar uma nova pessoa.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const nextCode = await generateNextCode();
       if (!nextCode) throw new Error('Erro ao gerar código');
@@ -63,7 +70,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
         .insert([{
           ...formData,
           codigo: nextCode,
-          empresa_id: formData.empresa_id || null, // Garantindo que seja null se vazio
+          empresa_id: empresaId, // Usando diretamente o empresaId
           Ativo: true
         }]);
 

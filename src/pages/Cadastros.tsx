@@ -6,8 +6,9 @@ import UsuariosTab from '../components/cadastros/usuarios/UsuariosTab';
 import EmpresasTab from '../components/cadastros/empresas/EmpresasTab';
 import ClientesTab from '../components/cadastros/clientes/ClientesTab';
 import PessoasTab from '../components/cadastros/pessoas/PessoasTab';
+import ServicosTab from '../components/cadastros/servicos/ServicosTab';
 
-type Tab = 'usuarios' | 'empresas' | 'clientes' | 'pessoas';
+type Tab = 'usuarios' | 'empresas' | 'clientes' | 'pessoas' | 'servicos';
 
 const Cadastros: React.FC = () => {
   const { theme } = useTheme();
@@ -20,6 +21,7 @@ const Cadastros: React.FC = () => {
     { id: 'empresas', label: 'Empresas' },
     { id: 'clientes', label: 'Clientes' },
     { id: 'pessoas', label: 'Pessoas' },
+    { id: 'servicos', label: 'Serviços' },
   ];
 
   const getTabContent = () => {
@@ -32,6 +34,8 @@ const Cadastros: React.FC = () => {
         return <ClientesTab empresaId={selectedEmpresa} />;
       case 'pessoas':
         return <PessoasTab empresaId={selectedEmpresa} />;
+      case 'servicos':
+        return <ServicosTab empresaId={selectedEmpresa} />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
