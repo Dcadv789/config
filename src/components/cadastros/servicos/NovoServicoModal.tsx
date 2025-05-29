@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
@@ -15,6 +15,8 @@ const NovoServicoModal: React.FC<NovoServicoModalProps> = ({ isOpen, onClose, on
   const isDark = theme === 'dark';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nextCode, setNextCode] = useState('');
+  const [empresaNome, setEmpresaNome] = useState('');
   const [formData, setFormData] = useState({
     codigo: '',
     nome: '',
@@ -22,7 +24,28 @@ const NovoServicoModal: React.FC<NovoServicoModalProps> = ({ isOpen, onClose, on
     empresa_id: empresaId,
   });
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      generateNextCode();
+      fetchEmpresaNome();
+    }
+  }, [isOpen, empresaId]);
+
+  const fetchEmpresaNome = async () => {
+    try {
+      const { data: empresa } = await supabase
+        .from('empresas')
+        .select('razao_social')
+        .eq('id', empresaId)
+        .single();
+
+      if (empresa) {
+        setEmpresaNome(empresa.razao_social);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar nome da empresa:', error);
+    }
+  };
 
   const generateNextCode = async () => {
     try {
@@ -32,18 +55,24 @@ const NovoServicoModal: React.FC<NovoServicoModalProps> = ({ isOpen, onClose, on
         .order('codigo', { ascending: false });
 
       if (!servicos?.length) {
-        return 'S0001';
+        const newCode = 'S0001';
+        setNextCode(newCode);
+        setFormData(prev => ({ ...prev, codigo: newCode }));
+        return;
       }
 
       const lastCode = servicos[0].codigo;
       const numericPart = parseInt(lastCode.substring(1));
       const nextCodeNum = String(numericPart + 1).padStart(4, '0');
-      return `S${nextCodeNum}`;
+      const newCode = `S${nextCodeNum}`;
+      setNextCode(newCode);
+      setFormData(prev => ({ ...prev, codigo: newCode }));
     } catch (error) {
       console.error('Erro ao gerar próximo código:', error);
-      return null;
     }
   };
+
+  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,9 +86,6 @@ const NovoServicoModal: React.FC<NovoServicoModalProps> = ({ isOpen, onClose, on
     }
 
     try {
-      const nextCode = await generateNextCode();
-      if (!nextCode) throw new Error('Erro ao gerar código');
-
       const { error } = await supabase
         .from('servicos')
         .insert([{
@@ -106,6 +132,38 @@ const NovoServicoModal: React.FC<NovoServicoModalProps> = ({ isOpen, onClose, on
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              Código
+            </label>
+            <input
+              type="text"
+              value={nextCode}
+              disabled
+              className={`w-full px-3 py-2 rounded-lg cursor-not-allowed opacity-75 ${
+                isDark
+                  ? 'bg-gray-800 text-white border-gray-700'
+                  : 'bg-white text-gray-900 border-gray-300'
+              }`}
+            />
+          </div>
+
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              Empresa
+            </label>
+            <input
+              type="text"
+              value={empresaNome}
+              disabled
+              className={`w-full px-3 py-2 rounded-lg cursor-not-allowed opacity-75 ${
+                isDark
+                  ? 'bg-gray-800 text-white border-gray-700'
+                  : 'bg-white text-gray-900 border-gray-300'
+              }`}
+            />
+          </div>
+
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
               Nome do Serviço
             </label>
             <input
@@ -134,7 +192,6 @@ const NovoServicoModal: React.FC<NovoServicoModalProps> = ({ isOpen, onClose, on
                   : 'bg-white text-gray-900 border-gray-300'
               }`}
               rows={4}
-              required
             />
           </div>
 

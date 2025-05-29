@@ -39,7 +39,7 @@ const Topbar: React.FC = () => {
   return (
     <header className={`rounded-2xl px-6 flex items-center justify-between h-16 transition-colors duration-200
       ${isDark ? 'bg-[#151515]' : 'bg-white'}`}>
-      <div className={`text-lg ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+      <div className={`text-lg font-montserrat tracking-wide ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
         {`${getGreeting()}, ${user?.nome?.split(' ')[0] || ''}! Aproveite o dashboard!`}
       </div>
       

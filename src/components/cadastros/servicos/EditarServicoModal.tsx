@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
+
+interface Empresa {
+  id: string;
+  razao_social: string;
+}
 
 interface Servico {
   id: string;
@@ -28,7 +33,42 @@ const EditarServicoModal: React.FC<EditarServicoModalProps> = ({
   const isDark = theme === 'dark';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [empresas, setEmpresas] = useState<Empresa[]>([]);
   const [formData, setFormData] = useState(servico);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchEmpresas();
+      setFormData(servico);
+    }
+  }, [isOpen, servico]);
+
+  const fetchEmpresas = async () => {
+    try {
+      const { data } = await supabase
+        .from('empresas')
+        .select('id, razao_social')
+        .order('razao_social');
+      
+      if (data) {
+        setEmpresas(data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar empresas:', error);
+    }
+  };
+
+  const validateCode = async () => {
+    if (formData.codigo === servico.codigo) return true;
+
+    const { data: existingServico } = await supabase
+      .from('servicos')
+      .select('id')
+      .eq('codigo', formData.codigo)
+      .single();
+
+    return !existingServico;
+  };
 
   if (!isOpen) return null;
 
@@ -38,11 +78,18 @@ const EditarServicoModal: React.FC<EditarServicoModalProps> = ({
     setError(null);
 
     try {
+      const isCodeValid = await validateCode();
+      if (!isCodeValid) {
+        throw new Error('Já existe um serviço cadastrado com este código');
+      }
+
       const { error } = await supabase
         .from('servicos')
         .update({
+          codigo: formData.codigo,
           nome: formData.nome,
           descricao: formData.descricao,
+          empresa_id: formData.empresa_id,
           modificado_em: new Date().toISOString()
         })
         .eq('id', servico.id);
@@ -87,13 +134,37 @@ const EditarServicoModal: React.FC<EditarServicoModalProps> = ({
             <input
               type="text"
               value={formData.codigo}
-              disabled
-              className={`w-full px-3 py-2 rounded-lg cursor-not-allowed opacity-75 ${
+              onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+              className={`w-full px-3 py-2 rounded-lg ${
                 isDark
                   ? 'bg-gray-800 text-white border-gray-700'
                   : 'bg-white text-gray-900 border-gray-300'
               }`}
+              required
             />
+          </div>
+
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              Empresa
+            </label>
+            <select
+              value={formData.empresa_id}
+              onChange={(e) => setFormData({ ...formData, empresa_id: e.target.value })}
+              className={`w-full px-3 py-2 rounded-lg ${
+                isDark
+                  ? 'bg-gray-800 text-white border-gray-700'
+                  : 'bg-white text-gray-900 border-gray-300'
+              }`}
+              required
+            >
+              <option value="">Selecione uma empresa</option>
+              {empresas.map((empresa) => (
+                <option key={empresa.id} value={empresa.id}>
+                  {empresa.razao_social}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -126,7 +197,6 @@ const EditarServicoModal: React.FC<EditarServicoModalProps> = ({
                   : 'bg-white text-gray-900 border-gray-300'
               }`}
               rows={4}
-              required
             />
           </div>
 

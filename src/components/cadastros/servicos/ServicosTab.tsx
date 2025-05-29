@@ -53,6 +53,8 @@ const ServicosTab: React.FC<ServicosTabProps> = ({ empresaId }) => {
         query = query.eq('ativo', statusFilter === 'ativos');
       }
 
+      query = query.order('codigo', { ascending: true });
+
       const { data, error } = await query;
       
       if (error) throw error;
