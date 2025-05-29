@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
@@ -10,6 +10,13 @@ interface Usuario {
   telefone: string;
   cargo: string;
   avatar_url: string;
+  role: string;
+  empresa_id: string;
+}
+
+interface Empresa {
+  id: string;
+  razao_social: string;
 }
 
 interface EditarUsuarioModalProps {
@@ -29,12 +36,23 @@ const EditarUsuarioModal: React.FC<EditarUsuarioModalProps> = ({
   const isDark = theme === 'dark';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [empresas, setEmpresas] = useState<Empresa[]>([]);
   const [formData, setFormData] = useState({
     nome: usuario.nome,
     telefone: usuario.telefone || '',
     cargo: usuario.cargo,
     avatar_url: usuario.avatar_url || '',
+    role: usuario.role,
+    empresa_id: usuario.empresa_id || '',
   });
+
+  useEffect(() => {
+    const fetchEmpresas = async () => {
+      const { data } = await supabase.from('empresas').select('id, razao_social');
+      if (data) setEmpresas(data);
+    };
+    fetchEmpresas();
+  }, []);
 
   if (!isOpen) return null;
 
@@ -44,9 +62,15 @@ const EditarUsuarioModal: React.FC<EditarUsuarioModalProps> = ({
     setError(null);
 
     try {
+      // Prepare user data, setting empresa_id to null for master users
+      const userData = {
+        ...formData,
+        empresa_id: formData.role === 'master' ? null : formData.empresa_id,
+      };
+
       const { error: updateError } = await supabase
         .from('usuarios')
-        .update(formData)
+        .update(userData)
         .eq('id', usuario.id);
 
       if (updateError) throw updateError;
@@ -89,8 +113,8 @@ const EditarUsuarioModal: React.FC<EditarUsuarioModalProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
             <label className={labelClasses}>Nome Completo</label>
             <input
               type="text"
@@ -101,8 +125,8 @@ const EditarUsuarioModal: React.FC<EditarUsuarioModalProps> = ({
             />
           </div>
 
-          <div>
-            <label className={labelClasses}>Email</label>
+          <div className="col-span-2">
+            <label className={labelClasses}>E-mail</label>
             <input
               type="email"
               value={usuario.email}
@@ -133,7 +157,29 @@ const EditarUsuarioModal: React.FC<EditarUsuarioModalProps> = ({
             />
           </div>
 
-          <div>
+          <div className="col-span-2">
+            <label className={labelClasses}>Posição no Sistema</label>
+            <select
+              value={formData.role}
+              onChange={(e) => {
+                const newRole = e.target.value;
+                setFormData({
+                  ...formData,
+                  role: newRole,
+                  empresa_id: newRole === 'master' ? '' : formData.empresa_id
+                });
+              }}
+              className={inputClasses}
+              required
+            >
+              <option value="">Selecione uma posição</option>
+              <option value="master">Master</option>
+              <option value="consultor">Consultor</option>
+              <option value="cliente">Cliente</option>
+            </select>
+          </div>
+
+          <div className="col-span-2">
             <label className={labelClasses}>URL do Avatar</label>
             <input
               type="url"
@@ -144,7 +190,25 @@ const EditarUsuarioModal: React.FC<EditarUsuarioModalProps> = ({
             />
           </div>
 
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="col-span-2">
+            <label className={labelClasses}>Empresa</label>
+            <select
+              value={formData.empresa_id}
+              onChange={(e) => setFormData({ ...formData, empresa_id: e.target.value })}
+              className={inputClasses}
+              required={formData.role !== 'master'}
+              disabled={formData.role === 'master'}
+            >
+              <option value="">Selecione uma empresa</option>
+              {empresas.map((empresa) => (
+                <option key={empresa.id} value={empresa.id}>
+                  {empresa.razao_social}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-span-2 flex justify-end gap-3 mt-6">
             <button
               type="button"
               onClick={onClose}

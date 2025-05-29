@@ -14,6 +14,10 @@ interface Usuario {
   cargo: string;
   empresa_id: string;
   ativo: boolean;
+  role: string;
+  empresa?: {
+    razao_social: string;
+  };
 }
 
 interface UsuariosTabProps {
@@ -37,7 +41,12 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
   const fetchUsuarios = async () => {
     try {
       setLoading(true);
-      let query = supabase.from('usuarios').select('*');
+      let query = supabase
+        .from('usuarios')
+        .select(`
+          *,
+          empresa:empresas(razao_social)
+        `);
       
       if (empresaId) {
         query = query.eq('empresa_id', empresaId);
