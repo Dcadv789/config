@@ -110,6 +110,7 @@ const ClientesTab: React.FC<ClientesTabProps> = ({ empresaId }) => {
       <div className="px-6">
         <ClientesHeader 
           onNewCliente={() => setIsModalOpen(true)}
+          empresaId={empresaId || null}
         />
       </div>
       <ClientesFilter

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Loader2, Building2, Building } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
@@ -15,6 +15,7 @@ const NovoClienteModal: React.FC<NovoClienteModalProps> = ({ isOpen, onClose, on
   const isDark = theme === 'dark';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nextCode, setNextCode] = useState('');
   const [formData, setFormData] = useState({
     codigo: '',
     razao_social: '',
@@ -22,6 +23,47 @@ const NovoClienteModal: React.FC<NovoClienteModalProps> = ({ isOpen, onClose, on
     cnpj: '',
     empresa_id: empresaId,
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      generateNextCode();
+    }
+  }, [isOpen]);
+
+  const generateNextCode = async () => {
+    try {
+      const { data: clientes } = await supabase
+        .from('clientes')
+        .select('codigo')
+        .order('codigo', { ascending: false });
+
+      if (!clientes?.length) {
+        const newCode = 'C0001';
+        setNextCode(newCode);
+        setFormData(prev => ({ ...prev, codigo: newCode }));
+        return;
+      }
+
+      const lastCode = clientes[0].codigo;
+      const numericPart = parseInt(lastCode.substring(1));
+      const nextCodeNum = String(numericPart + 1).padStart(4, '0');
+      const newCode = `C${nextCodeNum}`;
+      setNextCode(newCode);
+      setFormData(prev => ({ ...prev, codigo: newCode }));
+    } catch (error) {
+      console.error('Erro ao gerar próximo código:', error);
+    }
+  };
+
+  const validateCode = async () => {
+    const { data: existingCliente } = await supabase
+      .from('clientes')
+      .select('id')
+      .eq('codigo', formData.codigo)
+      .single();
+
+    return !existingCliente;
+  };
 
   if (!isOpen) return null;
 
@@ -31,6 +73,11 @@ const NovoClienteModal: React.FC<NovoClienteModalProps> = ({ isOpen, onClose, on
     setError(null);
 
     try {
+      const isCodeValid = await validateCode();
+      if (!isCodeValid) {
+        throw new Error('Já existe um cliente cadastrado com este código');
+      }
+
       const { error } = await supabase
         .from('clientes')
         .insert([{
@@ -78,13 +125,12 @@ const NovoClienteModal: React.FC<NovoClienteModalProps> = ({ isOpen, onClose, on
             <input
               type="text"
               value={formData.codigo}
-              onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
-              className={`w-full px-3 py-2 rounded-lg ${
+              disabled
+              className={`w-full px-3 py-2 rounded-lg cursor-not-allowed opacity-75 ${
                 isDark
                   ? 'bg-gray-800 text-white border-gray-700'
                   : 'bg-white text-gray-900 border-gray-300'
               }`}
-              required
             />
           </div>
 

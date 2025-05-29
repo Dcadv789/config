@@ -4,9 +4,10 @@ import { useTheme } from '../../../context/ThemeContext';
 
 interface ClientesHeaderProps {
   onNewCliente: () => void;
+  empresaId: string | null;
 }
 
-const ClientesHeader: React.FC<ClientesHeaderProps> = ({ onNewCliente }) => {
+const ClientesHeader: React.FC<ClientesHeaderProps> = ({ onNewCliente, empresaId }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -23,7 +24,13 @@ const ClientesHeader: React.FC<ClientesHeaderProps> = ({ onNewCliente }) => {
       <div className="flex items-center gap-3">
         <button
           onClick={onNewCliente}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center gap-2"
+          disabled={!empresaId}
+          className={`px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2
+            ${!empresaId 
+              ? 'bg-gray-600 text-gray-300 cursor-not-allowed opacity-50' 
+              : 'bg-indigo-600 text-white hover:bg-indigo-700'
+            }`}
+          title={!empresaId ? 'Selecione uma empresa para cadastrar um novo cliente' : ''}
         >
           <Plus className="h-5 w-5" />
           Novo Cliente

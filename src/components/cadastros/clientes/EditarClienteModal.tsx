@@ -33,12 +33,30 @@ const EditarClienteModal: React.FC<EditarClienteModalProps> = ({
 
   if (!isOpen) return null;
 
+  const validateCode = async () => {
+    const { data: existingCliente } = await supabase
+      .from('clientes')
+      .select('id')
+      .eq('codigo', formData.codigo)
+      .neq('id', cliente.id)
+      .single();
+
+    return !existingCliente;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
+      if (formData.codigo !== cliente.codigo) {
+        const isCodeValid = await validateCode();
+        if (!isCodeValid) {
+          throw new Error('Já existe um cliente cadastrado com este código');
+        }
+      }
+
       const { error } = await supabase
         .from('clientes')
         .update(formData)
