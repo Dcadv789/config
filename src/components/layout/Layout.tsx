@@ -9,14 +9,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className={`min-h-screen flex justify-center ${theme === 'dark' ? 'bg-black' : 'bg-gray-100'}`}>
       <div className="max-w-[1920px] w-full px-6">
-        <div className="flex relative pt-4">
+        <div className="flex relative pt-6">
           <Sidebar />
           
-          <div className="flex-grow ml-72">
+          <div className="flex-grow ml-64 pt-[2px]">
             <Topbar />
             
-            <main className={`mt-4 rounded-2xl min-h-[calc(100vh-100px)] p-6 
-              ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+            <main className="mt-4">
               {children}
             </main>
           </div>

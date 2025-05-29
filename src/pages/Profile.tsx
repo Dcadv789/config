@@ -7,12 +7,17 @@ const Profile: React.FC = () => {
   const isDark = theme === 'dark';
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className={`text-2xl font-bold mb-8 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-        Perfil do Usuário
-      </h1>
+    <div className="h-full">
+      <div className="px-6 mb-6">
+        <h1 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+          Perfil do Usuário
+        </h1>
+        <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          Gerencie suas informações pessoais e preferências de conta
+        </p>
+      </div>
 
-      <div className={`rounded-xl p-6 mb-8 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+      <div className={`rounded-xl p-6 mb-8 ${isDark ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
         <div className="flex items-center gap-6">
           <div className="h-24 w-24 rounded-full bg-indigo-600 flex items-center justify-center text-white">
             <User className="h-12 w-12" />
@@ -29,7 +34,7 @@ const Profile: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className={`rounded-xl p-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+        <div className={`rounded-xl p-6 ${isDark ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
           <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
             Informações Pessoais
           </h3>
@@ -49,7 +54,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
-        <div className={`rounded-xl p-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+        <div className={`rounded-xl p-6 ${isDark ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
           <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
             Configurações
           </h3>
