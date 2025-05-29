@@ -4,6 +4,7 @@ import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Cadastros from './pages/Cadastros';
+import BancoDados from './pages/BancoDados';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                 } />
                 <Route path="profile" element={<Profile />} />
                 <Route path="cadastros" element={<Cadastros />} />
+                <Route path="banco-dados" element={<BancoDados />} />
               </Routes>
             </Layout>
           </ProtectedRoute>
@@ -29,6 +31,7 @@ function App() {
           <Route path="/" />
           <Route path="/profile" />
           <Route path="/cadastros" />
+          <Route path="/banco-dados" />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

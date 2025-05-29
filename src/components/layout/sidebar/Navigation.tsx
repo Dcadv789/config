@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, LayoutDashboard, FileText } from 'lucide-react';
+import { Home, LayoutDashboard, FileText, Database } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ const Navigation: React.FC<NavigationProps> = ({ collapsed }) => {
     { id: 'home', label: 'Home', icon: Home, path: '/' },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
     { id: 'cadastros', label: 'Cadastros', icon: FileText, path: '/cadastros' },
+    { id: 'banco-dados', label: 'Banco de Dados', icon: Database, path: '/banco-dados' },
   ];
 
   return (
