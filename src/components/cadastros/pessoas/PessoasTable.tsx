@@ -11,7 +11,7 @@ interface Pessoa {
   email: string;
   telefone: string;
   cargo: string;
-  ativo: boolean;
+  Ativo: boolean;
   empresa?: {
     razao_social: string;
   };
@@ -88,11 +88,6 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
             </th>
             <th className="px-6 py-3 text-left">
               <span className={`text-xs font-medium tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                Contato
-              </span>
-            </th>
-            <th className="px-6 py-3 text-left">
-              <span className={`text-xs font-medium tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Cargo
               </span>
             </th>
@@ -111,13 +106,13 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
         <tbody className={`divide-y ${isDark ? 'divide-gray-700/50' : 'divide-gray-100'}`}>
           {loading ? (
             <tr>
-              <td colSpan={7} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <td colSpan={6} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Carregando...
               </td>
             </tr>
           ) : pessoas.length === 0 ? (
             <tr>
-              <td colSpan={7} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <td colSpan={6} className={`px-6 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Nenhuma pessoa encontrada
               </td>
             </tr>
@@ -136,12 +131,6 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
                     {pessoa.cnpj && <span>CNPJ: {formatCNPJ(pessoa.cnpj)}</span>}
                   </div>
                 </td>
-                <td className={`px-6 py-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="flex flex-col">
-                    <span>{pessoa.email}</span>
-                    <span className="text-sm opacity-75">{pessoa.telefone}</span>
-                  </div>
-                </td>
                 <td className="px-6 py-4">
                   <span className={getCargoBadgeClass(pessoa.cargo)}>
                     {getCargoLabel(pessoa.cargo)}
@@ -155,11 +144,11 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
                     <button
                       onClick={() => onToggleStatus(pessoa)}
                       className={`p-1.5 rounded-lg transition-colors ${
-                        pessoa.ativo
+                        pessoa.Ativo
                           ? 'text-green-500 hover:bg-green-500/10'
                           : 'text-red-500 hover:bg-red-500/10'
                       }`}
-                      title={pessoa.ativo ? 'Desativar pessoa' : 'Ativar pessoa'}
+                      title={pessoa.Ativo ? 'Desativar pessoa' : 'Ativar pessoa'}
                     >
                       <Power className="h-4 w-4" />
                     </button>

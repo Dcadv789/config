@@ -63,7 +63,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
         .insert([{
           ...formData,
           codigo: nextCode,
-          ativo: true
+          Ativo: true
         }]);
 
       if (error) throw error;
