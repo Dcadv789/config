@@ -52,14 +52,16 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
 
       if (authError) throw authError;
 
+      // Prepare user data, setting empresa_id to null for master users
+      const userData = {
+        ...formData,
+        empresa_id: formData.role === 'master' ? null : formData.empresa_id,
+        auth_id: authData.user?.id,
+        ativo: true,
+      };
+
       // Depois, inserir na tabela de usuários com o auth_id
-      const { error: dbError } = await supabase.from('usuarios').insert([
-        {
-          ...formData,
-          auth_id: authData.user?.id,
-          ativo: true,
-        },
-      ]);
+      const { error: dbError } = await supabase.from('usuarios').insert([userData]);
 
       if (dbError) throw dbError;
       onSuccess();
@@ -141,7 +143,15 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
             <label className={labelClasses}>Posição no Sistema</label>
             <select
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
+              onChange={(e) => {
+                const newRole = e.target.value as UserRole;
+                setFormData({
+                  ...formData,
+                  role: newRole,
+                  // Clear empresa_id if role is master
+                  empresa_id: newRole === 'master' ? '' : formData.empresa_id
+                });
+              }}
               className={inputClasses}
               required
             >
@@ -169,7 +179,8 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
               value={formData.empresa_id}
               onChange={(e) => setFormData({ ...formData, empresa_id: e.target.value })}
               className={inputClasses}
-              required
+              required={formData.role !== 'master'}
+              disabled={formData.role === 'master'}
             >
               <option value="">Selecione uma empresa</option>
               {empresas.map((empresa) => (
