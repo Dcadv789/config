@@ -5,6 +5,7 @@ import UsuariosFilter from './UsuariosFilter';
 import UsuariosTable from './UsuariosTable';
 import NovoUsuarioModal from './NovoUsuarioModal';
 import ImportarUsuariosModal from './ImportarUsuariosModal';
+import EditarUsuarioModal from './EditarUsuarioModal';
 
 interface Usuario {
   id: string;
@@ -26,6 +27,8 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
   const [statusFilter, setStatusFilter] = useState<'ativos' | 'inativos' | 'todos'>('ativos');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
 
   useEffect(() => {
     fetchUsuarios();
@@ -55,6 +58,41 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
     }
   };
 
+  const handleEditUser = (user: Usuario) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  };
+
+  const handleToggleUserStatus = async (user: Usuario) => {
+    try {
+      const { error } = await supabase
+        .from('usuarios')
+        .update({ ativo: !user.ativo })
+        .eq('id', user.id);
+
+      if (error) throw error;
+      fetchUsuarios();
+    } catch (error) {
+      console.error('Erro ao atualizar status do usuário:', error);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('usuarios')
+        .delete()
+        .eq('id', userId);
+
+      if (error) throw error;
+      fetchUsuarios();
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+    }
+  };
+
   const filteredUsuarios = usuarios.filter(usuario =>
     usuario.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     usuario.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,10 +100,12 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
 
   return (
     <>
-      <UsuariosHeader 
-        onNewUser={() => setIsModalOpen(true)}
-        onImportUsers={() => setIsImportModalOpen(true)}
-      />
+      <div className="px-6">
+        <UsuariosHeader 
+          onNewUser={() => setIsModalOpen(true)}
+          onImportUsers={() => setIsImportModalOpen(true)}
+        />
+      </div>
       <UsuariosFilter
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -75,6 +115,9 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
       <UsuariosTable
         usuarios={filteredUsuarios}
         loading={loading}
+        onEdit={handleEditUser}
+        onToggleStatus={handleToggleUserStatus}
+        onDelete={handleDeleteUser}
       />
       <NovoUsuarioModal
         isOpen={isModalOpen}
@@ -88,6 +131,17 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
         onSuccess={fetchUsuarios}
         empresaId={empresaId}
       />
+      {selectedUser && (
+        <EditarUsuarioModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedUser(null);
+          }}
+          onSuccess={fetchUsuarios}
+          usuario={selectedUser}
+        />
+      )}
     </>
   );
 };
