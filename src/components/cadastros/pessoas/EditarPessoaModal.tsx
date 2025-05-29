@@ -12,7 +12,7 @@ interface Pessoa {
   email: string;
   telefone: string;
   cargo: string;
-  Empresa_ID: string;
+  empresa_id: string;
 }
 
 interface EditarPessoaModalProps {
@@ -44,7 +44,15 @@ const EditarPessoaModal: React.FC<EditarPessoaModalProps> = ({
     try {
       const { error } = await supabase
         .from('pessoas')
-        .update(formData)
+        .update({
+          nome: formData.nome,
+          cpf: formData.cpf,
+          cnpj: formData.cnpj,
+          email: formData.email,
+          telefone: formData.telefone,
+          cargo: formData.cargo,
+          empresa_id: formData.empresa_id
+        })
         .eq('id', pessoa.id);
 
       if (error) throw error;
@@ -146,7 +154,6 @@ const EditarPessoaModal: React.FC<EditarPessoaModalProps> = ({
                   isDark
                     ? 'bg-gray-800 text-white border-gray-700'
                     : 'bg-white text-gray-900 border-gray-300'
-                
                 }`}
                 placeholder="00.000.000/0000-00"
               />
@@ -168,7 +175,6 @@ const EditarPessoaModal: React.FC<EditarPessoaModalProps> = ({
                     ? 'bg-gray-800 text-white border-gray-700'
                     : 'bg-white text-gray-900 border-gray-300'
                 }`}
-                required
               />
             </div>
           </div>
@@ -210,9 +216,9 @@ const EditarPessoaModal: React.FC<EditarPessoaModalProps> = ({
                 required
               >
                 <option value="">Selecione um cargo</option>
-                <option value="vendedor">Vendedor</option>
-                <option value="sdr">SDR</option>
-                <option value="ambos">Vendedor/SDR</option>
+                <option value="Vendedor">Vendedor</option>
+                <option value="SDR">SDR</option>
+                <option value="Ambos">Vendedor/SDR</option>
               </select>
             </div>
           </div>

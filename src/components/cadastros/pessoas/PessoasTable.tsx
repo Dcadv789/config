@@ -11,7 +11,7 @@ interface Pessoa {
   email: string;
   telefone: string;
   cargo: string;
-  Ativo: boolean;
+  ativo: boolean;
   empresas?: {
     razao_social: string;
   };
@@ -146,11 +146,11 @@ const PessoasTable: React.FC<PessoasTableProps> = ({
                     <button
                       onClick={() => onToggleStatus(pessoa)}
                       className={`p-1.5 rounded-lg transition-colors ${
-                        pessoa.Ativo
+                        pessoas.ativo
                           ? 'text-green-500 hover:bg-green-500/10'
                           : 'text-red-500 hover:bg-red-500/10'
                       }`}
-                      title={pessoa.Ativo ? 'Desativar pessoa' : 'Ativar pessoa'}
+                      title={pessoa.ativo ? 'Desativar pessoa' : 'Ativar pessoa'}
                     >
                       <Power className="h-4 w-4" />
                     </button>

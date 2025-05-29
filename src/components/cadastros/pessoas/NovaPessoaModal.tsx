@@ -23,7 +23,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
     email: '',
     telefone: '',
     cargo: '',
-    Empresa_ID: empresaId,
+    empresa_id: empresaId,
   });
 
   if (!isOpen) return null;
@@ -63,7 +63,7 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
         .insert([{
           ...formData,
           codigo: nextCode,
-          Ativo: true
+          ativo: true
         }]);
 
       if (error) throw error;
@@ -212,9 +212,9 @@ const NovaPessoaModal: React.FC<NovaPessoaModalProps> = ({ isOpen, onClose, onSu
                 required
               >
                 <option value="">Selecione um cargo</option>
-                <option value="vendedor">Vendedor</option>
-                <option value="sdr">SDR</option>
-                <option value="ambos">Vendedor/SDR</option>
+                <option value="Vendedor">Vendedor</option>
+                <option value="SDR">SDR</option>
+                <option value="Ambos">Vendedor/SDR</option>
               </select>
             </div>
           </div>
