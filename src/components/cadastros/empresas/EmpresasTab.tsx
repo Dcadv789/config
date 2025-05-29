@@ -13,7 +13,7 @@ interface Empresa {
   cnpj: string;
   email: string;
   telefone: string;
-  ativa: boolean;
+  ativo: boolean;
 }
 
 const EmpresasTab: React.FC = () => {
@@ -37,7 +37,7 @@ const EmpresasTab: React.FC = () => {
         .select('*');
       
       if (statusFilter !== 'todas') {
-        query = query.eq('ativa', statusFilter === 'ativas');
+        query = query.eq('ativo', statusFilter === 'ativas');
       }
 
       const { data, error } = await query;
@@ -60,7 +60,7 @@ const EmpresasTab: React.FC = () => {
     try {
       const { error } = await supabase
         .from('empresas')
-        .update({ ativa: !empresa.ativa })
+        .update({ ativo: !empresa.ativo })
         .eq('id', empresa.id);
 
       if (error) throw error;

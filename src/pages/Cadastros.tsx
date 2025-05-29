@@ -4,6 +4,7 @@ import TabBar from '../components/common/TabBar';
 import EmpresaFilter from '../components/common/EmpresaFilter';
 import UsuariosTab from '../components/cadastros/usuarios/UsuariosTab';
 import EmpresasTab from '../components/cadastros/empresas/EmpresasTab';
+import ClientesTab from '../components/cadastros/clientes/ClientesTab';
 
 type Tab = 'usuarios' | 'empresas' | 'clientes' | 'pessoas';
 
@@ -26,6 +27,8 @@ const Cadastros: React.FC = () => {
         return <UsuariosTab empresaId={selectedEmpresa} />;
       case 'empresas':
         return <EmpresasTab />;
+      case 'clientes':
+        return <ClientesTab empresaId={selectedEmpresa} />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
@@ -56,12 +59,10 @@ const Cadastros: React.FC = () => {
             onTabChange={(tabId) => setActiveTab(tabId as Tab)}
             className="flex-1"
           />
-          {activeTab === 'usuarios' && (
-            <EmpresaFilter
-              value={selectedEmpresa}
-              onChange={setSelectedEmpresa}
-            />
-          )}
+          <EmpresaFilter
+            value={selectedEmpresa}
+            onChange={setSelectedEmpresa}
+          />
         </div>
       </div>
 
