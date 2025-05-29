@@ -5,15 +5,22 @@ type Theme = 'light' | 'dark';
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  isSidebarCollapsed: boolean;
+  toggleSidebar: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>('dark');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(prev => !prev);
   };
 
   useEffect(() => {
@@ -21,7 +28,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isSidebarCollapsed, toggleSidebar }}>
       {children}
     </ThemeContext.Provider>
   );

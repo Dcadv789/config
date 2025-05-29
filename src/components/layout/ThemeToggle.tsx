@@ -2,9 +2,25 @@ import React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
-const ThemeToggle: React.FC = () => {
+interface ThemeToggleProps {
+  collapsed: boolean;
+}
+
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ collapsed }) => {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
+
+  if (collapsed) {
+    return (
+      <button
+        onClick={toggleTheme}
+        className={`p-2 rounded-lg transition-colors duration-200
+          ${isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}
+      >
+        {isDark ? <Moon size={20} /> : <Sun size={20} />}
+      </button>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center gap-6">
@@ -40,4 +56,4 @@ const ThemeToggle: React.FC = () => {
   );
 };
 
-export default ThemeToggle;
+export default ThemeToggle

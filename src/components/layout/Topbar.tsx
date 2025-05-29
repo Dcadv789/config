@@ -20,7 +20,7 @@ const Topbar: React.FC = () => {
 
   return (
     <header className={`rounded-2xl px-6 flex items-center justify-end h-16 transition-colors duration-200
-      ${isDark ? 'bg-[#1A1A1A]' : 'bg-white'}`}>
+      ${isDark ? 'bg-[#151515]' : 'bg-white'}`}>
       {/* Right section - User actions */}
       <div className="flex items-center space-x-4">
         <button className={`p-2 rounded-lg transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>
