@@ -9,6 +9,7 @@ interface Usuario {
   cargo: string;
   role: string;
   avatar_url: string;
+  auth_id_new: string;
 }
 
 interface UserContextType {
@@ -37,20 +38,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: userData, error: userError } = await supabase
         .from('usuarios')
         .select('*')
-        .eq('auth_id', session.user.id);
+        .eq('auth_id_new', session.user.id)
+        .single();
 
       if (userError) {
         throw userError;
       }
 
-      // Check if we got any user data back
-      if (!userData || userData.length === 0) {
-        setUser(null);
-        return;
-      }
-
-      // Set the first user profile found
-      setUser(userData[0]);
+      setUser(userData);
     } catch (err: any) {
       setError(err.message);
     } finally {
