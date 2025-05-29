@@ -5,6 +5,7 @@ import EmpresaFilter from '../components/common/EmpresaFilter';
 import UsuariosTab from '../components/cadastros/usuarios/UsuariosTab';
 import EmpresasTab from '../components/cadastros/empresas/EmpresasTab';
 import ClientesTab from '../components/cadastros/clientes/ClientesTab';
+import PessoasTab from '../components/cadastros/pessoas/PessoasTab';
 
 type Tab = 'usuarios' | 'empresas' | 'clientes' | 'pessoas';
 
@@ -29,6 +30,8 @@ const Cadastros: React.FC = () => {
         return <EmpresasTab />;
       case 'clientes':
         return <ClientesTab empresaId={selectedEmpresa} />;
+      case 'pessoas':
+        return <PessoasTab empresaId={selectedEmpresa} />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
