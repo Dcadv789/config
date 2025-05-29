@@ -29,18 +29,17 @@ const Cadastros: React.FC = () => {
         </p>
       </div>
 
-      <div className={`px-6 ${isDark ? 'bg-[#151515]' : 'bg-white'} py-4`}>
-        <div className="flex items-center justify-between gap-6">
+      <div className={`px-6 ${isDark ? 'bg-[#151515]' : 'bg-white'} py-4 rounded-xl`}>
+        <div className="flex items-center gap-8">
           <TabBar
             tabs={tabs}
             activeTab={activeTab}
             onTabChange={(tabId) => setActiveTab(tabId as Tab)}
-            className="w-[80%]"
+            className="flex-1"
           />
           <EmpresaFilter
             value={selectedEmpresa}
             onChange={setSelectedEmpresa}
-            className="w-[20%]"
           />
         </div>
       </div>
