@@ -12,6 +12,16 @@ const Topbar: React.FC = () => {
   const isDark = theme === 'dark';
   const navigate = useNavigate();
 
+  const getGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    if (hour >= 0 && hour < 6) return 'Boa madrugada';
+    if (hour >= 6 && hour < 12) return 'Bom dia';
+    if (hour >= 12 && hour < 18) return 'Boa tarde';
+    return 'Boa noite';
+  };
+
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
@@ -27,8 +37,12 @@ const Topbar: React.FC = () => {
   };
 
   return (
-    <header className={`rounded-2xl px-6 flex items-center justify-end h-16 transition-colors duration-200
+    <header className={`rounded-2xl px-6 flex items-center justify-between h-16 transition-colors duration-200
       ${isDark ? 'bg-[#151515]' : 'bg-white'}`}>
+      <div className={`text-lg ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+        {`${getGreeting()}, ${user?.nome?.split(' ')[0] || ''}! Aproveite o dashboard!`}
+      </div>
+      
       <div className="flex items-center space-x-4">
         <button className={`p-2 rounded-lg transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>
           <Bell className="h-5 w-5" />
@@ -93,4 +107,4 @@ const Topbar: React.FC = () => {
   );
 };
 
-export default Topbar
+export default Topbar;
