@@ -6,6 +6,9 @@ import CategoriasLista from './CategoriasLista';
 import EditarCategoriaModal from './EditarCategoriaModal';
 import EditarGrupoModal from './EditarGrupoModal';
 import VincularEmpresasModal from './VincularEmpresasModal';
+import NovaCategoriaModal from './NovaCategoriaModal';
+import NovoGrupoModal from './NovoGrupoModal';
+import VincularMassaModal from './VincularMassaModal';
 
 interface Categoria {
   id: string;
@@ -44,6 +47,9 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isEditGrupoModalOpen, setIsEditGrupoModalOpen] = useState(false);
   const [isVincularModalOpen, setIsVincularModalOpen] = useState(false);
+  const [isNovaCategoriaModalOpen, setIsNovaCategoriaModalOpen] = useState(false);
+  const [isNovoGrupoModalOpen, setIsNovoGrupoModalOpen] = useState(false);
+  const [isVincularMassaModalOpen, setIsVincularMassaModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCategorias();
@@ -104,15 +110,15 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
   };
 
   const handleNewGrupo = () => {
-    // Implementar modal de novo grupo
+    setIsNovoGrupoModalOpen(true);
   };
 
   const handleNewCategoria = () => {
-    // Implementar modal de nova categoria
+    setIsNovaCategoriaModalOpen(true);
   };
 
   const handleVincularMassa = () => {
-    // Implementar modal de vinculação em massa
+    setIsVincularMassaModalOpen(true);
   };
 
   const handleEditGrupo = async (grupoId: string) => {
@@ -256,6 +262,24 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
           grupo={selectedGrupo}
         />
       )}
+
+      <NovaCategoriaModal
+        isOpen={isNovaCategoriaModalOpen}
+        onClose={() => setIsNovaCategoriaModalOpen(false)}
+        onSuccess={fetchCategorias}
+      />
+
+      <NovoGrupoModal
+        isOpen={isNovoGrupoModalOpen}
+        onClose={() => setIsNovoGrupoModalOpen(false)}
+        onSuccess={fetchCategorias}
+      />
+
+      <VincularMassaModal
+        isOpen={isVincularMassaModalOpen}
+        onClose={() => setIsVincularMassaModalOpen(false)}
+        onSuccess={fetchCategorias}
+      />
     </>
   );
 };
