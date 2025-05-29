@@ -1,10 +1,21 @@
 import React from 'react';
-import { User, Mail, Phone, MapPin } from 'lucide-react';
+import { User, Mail, Phone, Building } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useUser } from '../context/UserContext';
 
 const Profile: React.FC = () => {
   const { theme } = useTheme();
+  const { user } = useUser();
   const isDark = theme === 'dark';
+
+  const getRoleLabel = (role: string) => {
+    const roles = {
+      master: 'Master',
+      consultor: 'Consultor',
+      cliente: 'Cliente'
+    };
+    return roles[role as keyof typeof roles] || role;
+  };
 
   return (
     <div className="h-full">
@@ -19,15 +30,23 @@ const Profile: React.FC = () => {
 
       <div className={`rounded-xl p-6 mb-8 ${isDark ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
         <div className="flex items-center gap-6">
-          <div className="h-24 w-24 rounded-full bg-indigo-600 flex items-center justify-center text-white">
-            <User className="h-12 w-12" />
-          </div>
+          {user?.avatar_url ? (
+            <img
+              src={user.avatar_url}
+              alt={user.nome}
+              className="h-24 w-24 rounded-full object-cover"
+            />
+          ) : (
+            <div className="h-24 w-24 rounded-full bg-indigo-600 flex items-center justify-center text-white">
+              <User className="h-12 w-12" />
+            </div>
+          )}
           <div>
             <h2 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              João Silva
+              {user?.nome || 'Carregando...'}
             </h2>
             <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-              Administrador
+              {getRoleLabel(user?.role || '')}
             </p>
           </div>
         </div>
@@ -41,15 +60,21 @@ const Profile: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Mail className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-              <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>joao.silva@exemplo.com</span>
+              <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>
+                {user?.email || 'Carregando...'}
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <Phone className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-              <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>(11) 98765-4321</span>
+              <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>
+                {user?.telefone || 'Não informado'}
+              </span>
             </div>
             <div className="flex items-center gap-3">
-              <MapPin className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-              <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>São Paulo, SP</span>
+              <Building className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+              <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>
+                {user?.cargo || 'Não informado'}
+              </span>
             </div>
           </div>
         </div>
@@ -72,4 +97,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default Profile
