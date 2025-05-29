@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import TabBar from '../components/common/TabBar';
 import EmpresaFilter from '../components/common/EmpresaFilter';
+import CategoriasTab from '../components/banco-dados/categorias/CategoriasTab';
 
 type Tab = 'categorias' | 'indicadores' | 'lancamentos' | 'lanc_clientes' | 'registro_vendas';
 
@@ -22,16 +23,7 @@ const BancoDados: React.FC = () => {
   const getTabContent = () => {
     switch (activeTab) {
       case 'categorias':
-        return (
-          <div className="px-6">
-            <h2 className={`text-xl font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Categorias
-            </h2>
-            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              Gerencie as categorias para classificação de indicadores e métricas
-            </p>
-          </div>
-        );
+        return <CategoriasTab empresaId={selectedEmpresa} />;
       case 'indicadores':
         return (
           <div className="px-6">
