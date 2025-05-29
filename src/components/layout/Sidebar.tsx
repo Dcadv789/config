@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside className={`fixed w-60 top-6 bottom-6 rounded-2xl flex flex-col z-10 transition-colors duration-200
-      ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+      ${isDark ? 'bg-[#1A1A1A]' : 'bg-white'}`}>
       <Logo />
       <DateTime />
       <Navigation selectedMenu={selectedMenu} onMenuSelect={setSelectedMenu} />
