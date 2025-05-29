@@ -3,6 +3,8 @@ import { supabase } from '../../../lib/supabase';
 import CategoriasHeader from './CategoriasHeader';
 import CategoriasFilter from './CategoriasFilter';
 import CategoriasLista from './CategoriasLista';
+import EditarCategoriaModal from './EditarCategoriaModal';
+import VincularEmpresasModal from './VincularEmpresasModal';
 
 interface Categoria {
   id: string;
@@ -26,12 +28,19 @@ interface GrupoCategoria {
   categorias: Categoria[];
 }
 
-const CategoriasTab: React.FC<{ empresaId: string }> = ({ empresaId }) => {
+interface CategoriasTabProps {
+  empresaId: string;
+}
+
+const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
   const [loading, setLoading] = useState(true);
   const [grupos, setGrupos] = useState<GrupoCategoria[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [tipoFilter, setTipoFilter] = useState<'receitas' | 'despesas' | 'todas'>('todas');
   const [statusFilter, setStatusFilter] = useState<'ativas' | 'inativas' | 'todas'>('ativas');
+  const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isVincularModalOpen, setIsVincularModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCategorias();
@@ -123,8 +132,14 @@ const CategoriasTab: React.FC<{ empresaId: string }> = ({ empresaId }) => {
     }
   };
 
-  const handleEditCategoria = async (categoriaId: string) => {
-    // Implementar modal de edição de categoria
+  const handleEditCategoria = (categoria: Categoria) => {
+    setSelectedCategoria(categoria);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditEmpresasVinculadas = (categoria: Categoria) => {
+    setSelectedCategoria(categoria);
+    setIsVincularModalOpen(true);
   };
 
   const handleDeleteCategoria = async (categoriaId: string) => {
@@ -168,10 +183,6 @@ const CategoriasTab: React.FC<{ empresaId: string }> = ({ empresaId }) => {
     }
   };
 
-  const handleEditEmpresasVinculadas = (categoriaId: string) => {
-    // Implementar modal de vinculação de empresas
-  };
-
   return (
     <>
       <div className="px-6">
@@ -202,6 +213,30 @@ const CategoriasTab: React.FC<{ empresaId: string }> = ({ empresaId }) => {
         onToggleCategoriaStatus={handleToggleCategoriaStatus}
         onEditEmpresasVinculadas={handleEditEmpresasVinculadas}
       />
+      
+      {selectedCategoria && (
+        <>
+          <EditarCategoriaModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setSelectedCategoria(null);
+            }}
+            onSuccess={fetchCategorias}
+            categoria={selectedCategoria}
+          />
+          
+          <VincularEmpresasModal
+            isOpen={isVincularModalOpen}
+            onClose={() => {
+              setIsVincularModalOpen(false);
+              setSelectedCategoria(null);
+            }}
+            onSuccess={fetchCategorias}
+            categoriaId={selectedCategoria.id}
+          />
+        </>
+      )}
     </>
   );
 };

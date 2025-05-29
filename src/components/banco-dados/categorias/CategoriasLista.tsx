@@ -32,7 +32,7 @@ interface CategoriasListaProps {
   onEditCategoria: (categoriaId: string) => void;
   onDeleteCategoria: (categoriaId: string) => void;
   onToggleCategoriaStatus: (categoriaId: string) => void;
-  onEditEmpresasVinculadas: (categoriaId: string) => void;
+  onEditEmpresasVinculadas: (categoria: Categoria) => void;
 }
 
 const CategoriasLista: React.FC<CategoriasListaProps> = ({
@@ -177,7 +177,7 @@ const CategoriasLista: React.FC<CategoriasListaProps> = ({
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={() => onEditEmpresasVinculadas(categoria.id)}
+                          onClick={() => onEditEmpresasVinculadas(categoria)}
                           className={`p-1.5 rounded-lg transition-colors ${
                             isDark
                               ? 'text-gray-400 hover:bg-gray-700'
