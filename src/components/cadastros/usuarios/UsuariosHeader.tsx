@@ -1,12 +1,13 @@
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, UserPlus } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 
 interface UsuariosHeaderProps {
   onNewUser: () => void;
+  onImportUsers: () => void;
 }
 
-const UsuariosHeader: React.FC<UsuariosHeaderProps> = ({ onNewUser }) => {
+const UsuariosHeader: React.FC<UsuariosHeaderProps> = ({ onNewUser, onImportUsers }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -20,13 +21,22 @@ const UsuariosHeader: React.FC<UsuariosHeaderProps> = ({ onNewUser }) => {
           Gerencie os usuários que têm acesso ao sistema
         </p>
       </div>
-      <button
-        onClick={onNewUser}
-        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center gap-2"
-      >
-        <Plus className="h-5 w-5" />
-        Novo Usuário
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onImportUsers}
+          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center gap-2"
+        >
+          <UserPlus className="h-5 w-5" />
+          Importar do Auth
+        </button>
+        <button
+          onClick={onNewUser}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center gap-2"
+        >
+          <Plus className="h-5 w-5" />
+          Novo Usuário
+        </button>
+      </div>
     </div>
   );
 };

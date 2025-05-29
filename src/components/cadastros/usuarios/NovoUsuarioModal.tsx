@@ -21,6 +21,8 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
@@ -43,31 +45,51 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
-      // Primeiro, criar o usuário no auth
+      // Inicia uma transação para garantir consistência
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: 'senha-temporaria-123', // Senha temporária que o usuário deverá alterar
+        options: {
+          data: {
+            role: formData.role, // Adiciona a role nos metadados do usuário
+            nome: formData.nome
+          }
+        }
       });
 
       if (authError) throw authError;
+      if (!authData.user) throw new Error('Falha ao criar usuário no Auth');
 
       // Prepare user data, setting empresa_id to null for master users
       const userData = {
         ...formData,
         empresa_id: formData.role === 'master' ? null : formData.empresa_id,
-        auth_id: authData.user?.id,
+        auth_id: authData.user.id,
         ativo: true,
       };
 
-      // Depois, inserir na tabela de usuários com o auth_id
-      const { error: dbError } = await supabase.from('usuarios').insert([userData]);
+      const { error: dbError } = await supabase
+        .from('usuarios')
+        .insert([userData])
+        .select()
+        .single();
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        // Se houver erro, tenta remover o usuário do Auth para manter consistência
+        await supabase.auth.admin.deleteUser(authData.user.id);
+        throw dbError;
+      }
+
       onSuccess();
       onClose();
-    } catch (error) {
-      console.error('Erro ao criar usuário:', error);
+    } catch (error: any) {
+      setError(error.message || 'Erro ao criar usuário');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,6 +115,12 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
             <X className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
           </button>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-red-100 border border-red-200 text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-400">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
@@ -148,7 +176,6 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
                 setFormData({
                   ...formData,
                   role: newRole,
-                  // Clear empresa_id if role is master
                   empresa_id: newRole === 'master' ? '' : formData.empresa_id
                 });
               }}
@@ -200,14 +227,16 @@ const NovoUsuarioModal: React.FC<NovoUsuarioModalProps> = ({ isOpen, onClose, on
                   ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
+              disabled={loading}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
             >
-              Criar Usuário
+              {loading ? 'Criando...' : 'Criar Usuário'}
             </button>
           </div>
         </form>

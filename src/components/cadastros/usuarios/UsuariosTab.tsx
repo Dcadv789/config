@@ -4,6 +4,7 @@ import UsuariosHeader from './UsuariosHeader';
 import UsuariosFilter from './UsuariosFilter';
 import UsuariosTable from './UsuariosTable';
 import NovoUsuarioModal from './NovoUsuarioModal';
+import ImportarUsuariosModal from './ImportarUsuariosModal';
 
 interface Usuario {
   id: string;
@@ -24,6 +25,7 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ativos' | 'inativos' | 'todos'>('ativos');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   useEffect(() => {
     fetchUsuarios();
@@ -60,7 +62,10 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
 
   return (
     <>
-      <UsuariosHeader onNewUser={() => setIsModalOpen(true)} />
+      <UsuariosHeader 
+        onNewUser={() => setIsModalOpen(true)}
+        onImportUsers={() => setIsImportModalOpen(true)}
+      />
       <UsuariosFilter
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -74,6 +79,12 @@ const UsuariosTab: React.FC<UsuariosTabProps> = ({ empresaId }) => {
       <NovoUsuarioModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchUsuarios}
+        empresaId={empresaId}
+      />
+      <ImportarUsuariosModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
         onSuccess={fetchUsuarios}
         empresaId={empresaId}
       />
