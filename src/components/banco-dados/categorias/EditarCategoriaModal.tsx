@@ -8,7 +8,7 @@ interface Categoria {
   codigo: string;
   nome: string;
   descricao: string;
-  tipo: 'receita' | 'despesa';
+  tipo: 'Receita' | 'Despesa';
   ativo: boolean;
   grupo_id: string;
 }
@@ -187,7 +187,7 @@ const EditarCategoriaModal: React.FC<EditarCategoriaModalProps> = ({
             </label>
             <select
               value={formData.tipo}
-              onChange={(e) => setFormData({ ...formData, tipo: e.target.value as 'receita' | 'despesa' })}
+              onChange={(e) => setFormData({ ...formData, tipo: e.target.value as 'Receita' | 'Despesa' })}
               className={`w-full px-3 py-2 rounded-lg ${
                 isDark
                   ? 'bg-gray-800 text-white border-gray-700'
@@ -196,8 +196,8 @@ const EditarCategoriaModal: React.FC<EditarCategoriaModalProps> = ({
               required
             >
               <option value="">Selecione um tipo</option>
-              <option value="receita">Receita</option>
-              <option value="despesa">Despesa</option>
+              <option value="Receita">Receita</option>
+              <option value="Despesa">Despesa</option>
             </select>
           </div>
 

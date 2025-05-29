@@ -7,7 +7,7 @@ interface Categoria {
   codigo: string;
   nome: string;
   descricao: string;
-  tipo: 'receita' | 'despesa';
+  tipo: 'Receita' | 'Despesa';
   ativo: boolean;
   grupo_id: string;
   criado_em: string;
@@ -163,7 +163,7 @@ const CategoriasLista: React.FC<CategoriasListaProps> = ({
                     </td>
                     <td className={`px-6 py-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium
-                        ${categoria.tipo === 'receita'
+                        ${categoria.tipo === 'Receita'
                           ? isDark
                             ? 'bg-green-900/30 text-green-400 border border-green-800'
                             : 'bg-green-50 text-green-700 border border-green-200'
@@ -171,7 +171,7 @@ const CategoriasLista: React.FC<CategoriasListaProps> = ({
                             ? 'bg-red-900/30 text-red-400 border border-red-800'
                             : 'bg-red-50 text-red-700 border border-red-200'
                         }`}>
-                        {categoria.tipo === 'receita' ? 'Receita' : 'Despesa'}
+                        {categoria.tipo}
                       </span>
                     </td>
                     <td className="px-6 py-4">

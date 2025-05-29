@@ -12,7 +12,7 @@ interface Categoria {
   codigo: string;
   nome: string;
   descricao: string;
-  tipo: 'receita' | 'despesa';
+  tipo: 'Receita' | 'Despesa';
   ativo: boolean;
   grupo_id: string;
   criado_em: string;
@@ -69,7 +69,7 @@ const CategoriasTab: React.FC<CategoriasTabProps> = ({ empresaId }) => {
         .order('codigo');
 
       if (tipoFilter !== 'todas') {
-        categoriasQuery = categoriasQuery.eq('tipo', tipoFilter === 'receitas' ? 'receita' : 'despesa');
+        categoriasQuery = categoriasQuery.eq('tipo', tipoFilter === 'receitas' ? 'Receita' : 'Despesa');
       }
 
       if (statusFilter !== 'todas') {
